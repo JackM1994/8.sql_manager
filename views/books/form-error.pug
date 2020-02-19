@@ -1,0 +1,22 @@
+extends ../layout 
+block content
+    h1 Create a New Book
+    form(action="/books/new", method ="post")
+    h2.error Ooops!
+    ul.error    
+        li Author is required
+        li Name is required
+    p   
+        label(for="title") Title
+        input#title(name="title" type="text")
+    p
+        label(for="author") Author
+        input#author(name="author" type="text")
+    p   
+        label(for="genre") Genre
+        input#genre(name="genre" type="text")
+    p
+        lablel(for="year") Year
+        input#year(name="year" type="text")
+    p
+        a.button(href="/books") Cancel
