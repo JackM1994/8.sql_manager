@@ -1,7 +1,7 @@
 extends ../layout
 block content
 
-    h1 Update Book
+    h2 Update Book
     include error
     form(action="/books/" + book.id method="post")
       include form
@@ -10,7 +10,9 @@ block content
 
       p
         a.button(href='/') Home
+
       p 
+      
         a.button(href='/books/' + book.id + '/delete') Delete Book
       
 
