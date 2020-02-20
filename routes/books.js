@@ -28,9 +28,8 @@ router.get('/new', (req, res) => {
 router.post('/new', asyncHandler(async (req, res) => {
   let book;
   try{
-    console.log(req.body);
     book = await Books.create(req.body);
-    res.redirect("/books/");
+    res.redirect("/books/" + book.id);
   }catch(error){
     if(error.name === 'SequelizeValidationError'){
       book = await Books.build(req.body);
@@ -55,24 +54,49 @@ router.get("/:id", asyncHandler(async (req, res) => {
 }));
 
 /* Update a book. */
-router.post('/:id/', asyncHandler(async (req, res) => {
-  const book = await Books.findByPk(req.params.id);
-  await book.update(req.body);
-  res.redirect("/books/" + book.id);
+router.post('/:id', asyncHandler(async (req, res) => {
+  let book;
+  try{
+    book = await Books.findByPk(req.params.id);
+    if(book){
+      await book.update(req.body);
+      res.redirect("/books/" + book.id);
+    }else{
+      let error = new Error("Not Avaibable");
+      res.render("error", { error, message: error.message });
+    } 
+  }catch (error) {
+    if(error.name === "SequelizeValidationError") {
+      book = await Books.build(req.body);
+      book.id = req.params.id;
+      res.render("books/update-book", { book, errors: error.errors, title: "Update Book" })
+    } else {
+      throw error;
+    }
+  }   
 }));
-
-
 
 /* Delete book article. */
 router.get('/:id/delete', asyncHandler(async (req ,res) => {
   const book = await Books.findByPk(req.params.id);
-  res.render("/books/delete", {book, title: "Delete Book"});
+  if(book){
+    res.render("books/delete", {book, title: "Delete Book"});
+  } else{
+    let error = new Error("Not Avaibable");
+    res.render("error", { error, message: error.message });
+  } 
 }));
 
 router.post('/:id/delete', asyncHandler(async (req, res) => {
   const book = await Books.findByPk(req.params.id);
-  await book.destroy();
-  res.redirect('/books');
+  if(book){
+    await book.destroy();
+    res.redirect('/books');
+  }else{
+    let error = new Error("Not Avaibable");
+    res.render("error", { error, message: error.message });
+  }
+ 
 }));
 
 module.exports = router;

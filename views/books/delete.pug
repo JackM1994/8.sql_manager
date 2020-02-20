@@ -1,12 +1,12 @@
 extends ../layout 
 block content
-    p
-        |Are you sure you want to delete 
-        em= book.title
-        |?
-    form(action="/books/" + book.id + "/delete", method="post")
-        a(href="/books/" + books.id) Cancel
-    |
-    input(type="submit", value ="Yes, I'm sure")
 
-  
+    h1 Delete Book
+
+    form(method="post" action=`/books/${book.id}/delete` onsubmit='return confirm("Do you really want to delete this book?");')
+
+        include form
+        p    
+            a.button(href='/') Cancel
+        p
+            input(type='submit' value="Delete Book")
