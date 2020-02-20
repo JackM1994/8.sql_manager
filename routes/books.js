@@ -15,7 +15,7 @@ function asyncHandler(cb){
 
 /* GET books listing. */
 router.get('/', asyncHandler(async (req, res) => {
-  const books = await Books.findAll({ order: [["year", "DESC"]] });
+  const books = await Books.findAll({ order: [["title", "ASC"]] });
   res.render("books/index", { books });
 }));
 
@@ -45,25 +45,34 @@ router.post('/new', asyncHandler(async (req, res) => {
 
 /* GET individual book. */
 router.get("/:id", asyncHandler(async (req, res) => {
-  const book = await Books.findByPK(req.params.id);
+  const book = await Books.findByPk(req.params.id);
   if(book){
-    res.render("books/update-book", { book, title: book.title});
+    res.render("books/update-book", { book, title: book.title });
   }else{
     let error = new Error("Not Avaibable");
     res.render("error", { error, message: error.message });
   } 
 }));
 
-/* Update an book. */
+/* Update a book. */
 router.post('/:id/', asyncHandler(async (req, res) => {
-  res.redirect("/books/");
+  const book = await Books.findByPk(req.params.id);
+  await book.update(req.body);
+  res.redirect("/books/" + book.id);
 }));
 
 
 
 /* Delete book article. */
-router.post('/:id/delete', asyncHandler(async (req ,res) => {
-  res.redirect("/books");
+router.get('/:id/delete', asyncHandler(async (req ,res) => {
+  const book = await Books.findByPk(req.params.id);
+  res.render("/books/delete", {book, title: "Delete Book"});
+}));
+
+router.post('/:id/delete', asyncHandler(async (req, res) => {
+  const book = await Books.findByPk(req.params.id);
+  await book.destroy();
+  res.redirect('/books');
 }));
 
 module.exports = router;
