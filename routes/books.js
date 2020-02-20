@@ -48,8 +48,7 @@ router.get("/:id", asyncHandler(async (req, res) => {
   if(book){
     res.render("books/update-book", { book, title: book.title });
   }else{
-    let error = new Error("Not Avaibable");
-    res.render("error", { error, message: error.message });
+    res.sendStatus(404);
   } 
 }));
 
@@ -62,8 +61,7 @@ router.post('/:id', asyncHandler(async (req, res) => {
       await book.update(req.body);
       res.redirect("/books/" + book.id);
     }else{
-      let error = new Error("Not Avaibable");
-      res.render("error", { error, message: error.message });
+      res.sendStatus(404);
     } 
   }catch (error) {
     if(error.name === "SequelizeValidationError") {
@@ -82,8 +80,7 @@ router.get('/:id/delete', asyncHandler(async (req ,res) => {
   if(book){
     res.render("books/delete", {book, title: "Delete Book"});
   } else{
-    let error = new Error("Not Avaibable");
-    res.render("error", { error, message: error.message });
+    res.sendStatus(404);
   } 
 }));
 
