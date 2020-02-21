@@ -1,7 +1,7 @@
 extends ../layout
 block content
-
-    h2 Update Book
+    div.update
+      h1 Update Book
     include error
     form(action="/books/" + book.id method="post")
       include form
